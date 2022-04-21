@@ -18,6 +18,7 @@
   - [Differentially expressed transcripts (DEGs) Analysis](#M6)
   - [Target gene prediction](#M7)
   - [Enrichment Analysis](#M8)
+- [References](#R1)
 
 # <span id='L0'>LncRNA Filtering of Raw Reads</span>
 
@@ -251,3 +252,15 @@ miranda $input_mirna $input_mrna -en -10 -strict >$output
 Enrichment analysis was performed using omicshare tools.
 kegg: https://www.omicshare.com/tools/Home/Soft/pathwaygseasenior
 go: https://www.omicshare.com/tools/Home/Soft/gogseasenior
+
+# <span id='R1'>References</span>
+
+1. Chen S, Zhou Y, Chen Y, et al. fastp: an ultra-fast all-in-one FASTQ preprocessor[J]. Bioinformatics, 2018, 34(17): i884-i890.
+2. Langmead B, Salzberg S L. Fast gapped-read alignment with Bowtie 2[J]. Nature methods, 2012, 9(4): 357.
+3. Kim, Daehwan, Ben Langmead, and Steven L. Salzberg. "HISAT: a fast spliced aligner with low memory requirements." Nature methods 12.4 (2015): 357.
+4. Pertea M, Pertea G M, Antonescu C M, et al. StringTie enables improved reconstruction of a transcriptome from RNA-seq reads[J]. Nature biotechnology, 2015, 33(3): 290.
+5. Li B, Dewey C N. RSEM: accurate transcript quantification from RNA-Seq data with or without a reference genome[J]. BMC bioinformatics, 2011, 12(1): 323.
+6. Yu-Jian K , De-Chang Y , Lei K , et al. CPC2: a fast and accurate coding potential calculator based on sequence intrinsic features[J]. Nuclc Acids Research, 2017(W1):W1.
+7. Liang S, Haitao L, Dechao B, et al. Utilizing sequence intrinsic composition to classify protein-coding and long non-coding transcripts[J]. Nuclc Acids Research, 2013(17):e166-e166.
+8. Robinson M D, McCarthy D J, Smyth G K. edgeR: a Bioconductor package for differential expression analysis of digital gene expression data[J]. Bioinformatics, 2010, 26(1): 139-140.
+
