@@ -1,4 +1,25 @@
-# LncRNA Filtering of Raw Reads
+# Table of contents
+
+- [LncRNA Filtering of Raw Reads](#L0)
+  - [Alignment with Ribosome RNA (rRNA)](#L1)
+  - [Alignment with reference genome](#L2)
+  - [Transcripts Reconstruction](#L3)
+  - [Novel Transcripts](#L4)
+  - [Quantification of Transcripts](#L5)
+  - [New lncRNAs identification](#L6)
+  - [Differentially expressed transcripts (DEGs) Analysis](#L7)
+  - [Enrichment Analysis](#L8)
+- [miRNA Filtering of Raw Reads](#M0)
+  - [Exist mirna statistics](#M1)
+  - [Removing ncRNAs](#M2)
+  - [Known mirna identification](#M3)
+  - [Alignment with Reference Genome](#M4)
+  - [Novel mirna identification](#M5)
+  - [Differentially expressed transcripts (DEGs) Analysis](#M6)
+  - [Target gene prediction](#M7)
+  - [Enrichment Analysis](#M8)
+
+# <span id='L0'>LncRNA Filtering of Raw Reads</span>
 
 Fastp v0.18.0 (Chen, et al. 2018) was used for quality control of raw reads off the machine, and clean reads were obtained after filtering low quality data. Filtration parameters were as follows:
 
@@ -16,7 +37,7 @@ Fastp v0.18.0 (Chen, et al. 2018) was used for quality control of raw reads off 
 fastp -a AGATCGGAAGAGC -q 20 -u 50 -n 15 -l 50 -i $input_1 -I $input_2 -o $output_1 -O $output_2 -j $output.json -h $output.html
 ```
 
-## Alignment with Ribosome RNA (rRNA)
+## <span id='L1'>Alignment with Ribosome RNA (rRNA)</span>
 
 Short reads alignment tool bowtie2 v2.28 (Langmead et al. 2012) was used for mapping reads to ribosome RNA (rRNA) database. The rRNA mapped reads were then removed. The reserved unmapped reads were used for subsequent transcriptome analysis. The comparison parameters were as follows:
 
@@ -27,7 +48,7 @@ Short reads alignment tool bowtie2 v2.28 (Langmead et al. 2012) was used for map
 bowtie2 --local -x $rRNA_index -1 $input_1 -2 $input_2 --un-conc-gz $output
 ```
 
-## Alignment with reference genome
+## <span id='L2'>Alignment with reference genome</span>
 
 HISAT2 v2.1.0 (Kim et al. 2015) was used for mapping analysis based on reference genome. The main parameters were as follows:
 
@@ -38,7 +59,7 @@ HISAT2 v2.1.0 (Kim et al. 2015) was used for mapping analysis based on reference
 hisat2 --rna-strandness RF -x $genome_index -q -1 $input_1 -2 $Input_2 --known-splicesite-infile $genome.splices_sites --dta --summary-file $output.stat --new-summary >$output.sam
 ```
 
-## Transcripts Reconstruction
+## <span id='L3'>Transcripts Reconstruction</span>
 
 The reconstruction of transcripts was carried out with software stringtie v1.3.4 (Pertea et al. 2015). The parameters were as follows:
 
@@ -59,7 +80,7 @@ stringtie merge
 stringtie --merge -f 0.3 -m 200 -G $genome.gtf -o $output.merge.gtf $input.gtf.list
 ```
 
-## Novel Transcripts
+## <span id='L4'>Novel Transcripts</span>
 
 Cuffcompare was used to obtain the new gene type of Stringtie, and the self-written Perl script was used to extract class_code (u, i, j, x, c, e, o), and the transcript with exon number greater than 1 was the new transcript.
 cuffcompare class_code: http://www.omicsclass.com/article/234
@@ -68,7 +89,7 @@ cuffcompare class_code: http://www.omicsclass.com/article/234
 cuffcompare -r $genome.gtf -o $output $input.merge.gtf
 ```
 
-## Quantification of Transcripts
+## <span id='L5'>Quantification of Transcripts</span>
 
 RSEM v1.2.19 (Li et al. 2011) software was called to quantify the transcript with script align_and_estimate_abundance.pl in Trinity v2.0.6. The parameters were as follows:
 
@@ -80,7 +101,7 @@ RSEM v1.2.19 (Li et al. 2011) software was called to quantify the transcript wit
 perl align_and_estimate_abundance.pl --transcripts $exon.fa --gene_trans_map $exon.map --est_method RSEM --aln_method bowtie2 --seqType fq --left $input_1 --right $input_2 --output_dir $output --quality --phred33-quals --SS_lib_type RF
 ```
 
-## New lncRNAs identification
+## <span id='L6'>New lncRNAs identification</span>
 
 After obtaining the reconstructed transcript of Stringtie, the new lncRNA was predicted:
 
@@ -98,7 +119,7 @@ python CPC2 -i $input.fa --ORF -o $output.CPC2.result
 python CNCI.py -f $input.fa -m ve -o $output
 ```
 
-## Differentially expressed transcripts (DEGs) Analysis
+## <span id='L7'>Differentially expressed transcripts (DEGs) Analysis</span>
 
 DESeq v1.20.0 (Anders et al, 2014) was used to performe lncRNAs differential expression analysis. BH FDR correction. The genes with the parameter of |log2(FC)| > 1,FDR< 0.05 were considered differentially expressed genes.
 
@@ -108,17 +129,13 @@ dds <- DESeq(dds)
 res= results(dds)
 ```
 
-## Enrichment Analysis
+## <span id='L8'>Enrichment Analysis</span>
 
 Enrichment analysis was performed using omicshare tools.
 kegg: https://www.omicshare.com/tools/Home/Soft/pathwaygseasenior
 go: https://www.omicshare.com/tools/Home/Soft/gogseasenior
 
-
-
-
-
-# miRNA Filtering of Raw Reads
+# <span id='M0'>miRNA Filtering of Raw Reads</span>
 
 Fastp v0.18.0 (Chen, et al. 2018) was used for quality control of raw reads off the machine, and clean reads were obtained after filtering low quality data. Filtration parameters were as follows:
 
@@ -134,7 +151,7 @@ Fastp v0.18.0 (Chen, et al. 2018) was used for quality control of raw reads off 
 fastp -a TGGAATTCTCGG -q 20 -u 50 -n 15 -l 10 -i $input_1 -I $input_2 -o $output_1 -O $output_2 -j $output.json -h $output.html
 ```
 
-## Exist mirna statistics
+## <span id='M1'>Exist mirna statistics</span>
 
 Tags were compared with the precursors of mirbase miRNA sequences of this species using bowtie v1.1.2 software. The parameters were as follows:
 
@@ -148,7 +165,7 @@ Tags were compared with the precursors of mirbase miRNA sequences of this specie
 bowtie $mirna_hairpin -f $input -v 0 --best --strata -a --norc -S >$output.sam
 ```
 
-## Removing ncRNAs
+## <span id='M2'>Removing ncRNAs</span>
 
 - blastall v2.2.26 was used for mapping reads to Rfam database. The parameter was as follows: 
   - Expectation value: -e 0.01
@@ -164,7 +181,7 @@ blastall -p blastn -i $input -d $Rfam_db -e 0.01 -o $output
 blastall -p blastn -i $input -d $Rfam_db -e 0.01 -o $output
 ```
 
-## Known mirna identification
+## <span id='M3'>Known mirna identification</span>
 
 Selecting to remove the sequence alignment with exist mirna, and then selecting the tags sequence after removing ncRNA. Bowtie v1.1.2 was used to align with the precursor sequences of mirbase mirna. The parameters were as follows:
 
@@ -178,7 +195,7 @@ Selecting to remove the sequence alignment with exist mirna, and then selecting 
 bowtie $mirna_hairpin -f $input -v 2 --best --strata -a --norc -S >$output.sam
 ```
 
-## Alignment with Reference Genome
+## <span id='M4'>Alignment with Reference Genome</span>
 
 Bowtie v1.1.2 was used to alignment with the tags of reference genome. The parameters were as follows:
 
@@ -191,7 +208,7 @@ Bowtie v1.1.2 was used to alignment with the tags of reference genome. The param
 bowtie $genome -f $input -v 0 --best --strata -k 500 -S >$output.sam
 ```
 
-## Novel mirna identification
+## <span id='M5'>Novel mirna identification</span>
 
 The tags sequences of exist mirna, known mirna were removed and aligned with the tags of genome. MiRDeep2 v2.0.0.7 was used to identify the novel mirnas. The parameters were as follows:
 
@@ -201,7 +218,7 @@ The tags sequences of exist mirna, known mirna were removed and aligned with the
 perl miRDeep2.pl $input $genome $aln.txt none none none $output -v -g 50000
 ```
 
-## Differentially expressed transcripts (DEGs) Analysis
+## <span id='M6'>Differentially expressed transcripts (DEGs) Analysis</span>
 
 edgeR v3.12.1 (Robinson et al, 2010) was used to performe miRNAs differential expression analysis. The parameter of |log2(FC)| > 1,FDR< 0.05 were considered differentially expressed mirnas.
 
@@ -212,7 +229,7 @@ Diff_list = estimateTagwiseDisp(Diff_list)
 etest = exactTest(Diff_list)
 ```
 
-## Target gene prediction
+## <span id='M7'>Target gene prediction</span>
 
 Target genes were obtained by intersection of targetscan v7.0 and miranda v3.3a. 
 
@@ -229,7 +246,7 @@ perl targetscan_70.pl $input_mirna $input_mrna $output
 miranda $input_mirna $input_mrna -en -10 -strict >$output
 ```
 
-## Enrichment Analysis
+## <span id='M8'>Enrichment Analysis</span>
 
 Enrichment analysis was performed using omicshare tools.
 kegg: https://www.omicshare.com/tools/Home/Soft/pathwaygseasenior
